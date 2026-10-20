@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily English</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a2332;
+      --muted: #5a6a7a;
+      --paper: #f7f3ec;
+      --card: #fffdf8;
+      --accent: #0d6e6e;
+      --accent-soft: #d4efef;
+      --warn: #c45c26;
+      --line: #e4ddd0;
+      --shadow: 0 12px 40px rgba(26, 35, 50, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: "DM Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #c8e8e4 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, #f0e0d0 0%, transparent 50%),
+        var(--paper);
+      padding: 2rem 1.25rem 3rem;
+    }
+
+    .wrap {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 1.75rem;
+      animation: rise 0.6s ease both;
+    }
+
+    .brand {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.2rem, 6vw, 2.8rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--accent);
+    }
+
+    .tagline {
+      margin-top: 0.45rem;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+      animation: rise 0.6s ease 0.08s both;
+    }
+
+    .tab {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-weight: 600;
+      padding: 0.65rem 0.5rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .tab:hover { border-color: var(--accent); color: var(--accent); }
+    .tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .panel {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      animation: rise 0.5s ease both;
+    }
+
+    .panel.active { display: block; }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .progress-bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.35s ease;
+    }
+
+    .word {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2rem, 7vw, 2.6rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .phonetic {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .meaning {
+      font-size: 1.15rem;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .example {
+      padding: 0.9rem 1rem;
+      background: var(--accent-soft);
+      border-radius: 0.85rem;
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 0.98rem;
+    }
+
+    .example em {
+      display: block;
+      margin-top: 0.35rem;
+      font-style: normal;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1.35rem;
+      flex-wrap: wrap;
+    }
+
+    button.btn {
+      border: none;
+      font: inherit;
+      font-weight: 600;
+      padding: 0.75rem 1.1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s, opacity 0.2s;
+    }
+
+    button.btn:active { transform: scale(0.97); }
+    button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .btn-primary:hover:not(:disabled) { background: #0a5858; }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .quiz-prompt {
+      font-size: 1.05rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-word {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.8rem, 6vw, 2.3rem);
+      margin-bottom: 1.25rem;
+    }
+
+    .choices {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .choice {
+      text-align: left;
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      border-radius: 0.85rem;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+
+    .choice:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .choice.correct {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .choice.wrong {
+      border-color: var(--warn);
+      background: #fdeee6;
+      color: var(--warn);
+    }
+
+    .feedback {
+      min-height: 1.4rem;
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .feedback.ok { color: var(--accent); }
+    .feedback.no { color: var(--warn); }
+
+    .score-box {
+      text-align: center;
+      padding: 0.5rem 0 0.25rem;
+    }
+
+    .score-box .big {
+      font-family: "Fraunces", serif;
+      font-size: 3rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .score-box p {
+      margin-top: 0.6rem;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      animation: rise 0.6s ease 0.16s both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1 class="brand">Daily English</h1>
+      <p class="tagline">하루 몇 단어면 충분해요. 카드로 익히고, 퀴즈로 확인해 보세요.</p>
+    </header>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="cards" type="button">단어 카드</button>
+      <button class="tab" data-tab="quiz" type="button">퀴즈</button>
+    </div>
+
+    <section id="cards" class="panel active" aria-label="단어 카드">
+      <div class="meta">
+        <span id="card-count">1 / 8</span>
+        <span>뜻을 보고 소리 내어 읽어 보세요</span>
+      </div>
+      <div class="progress-bar"><span id="card-progress"></span></div>
+      <div id="card-body"></div>
+      <div class="actions">
+        <button class="btn btn-ghost" id="btn-prev" type="button">이전</button>
+        <button class="btn btn-primary" id="btn-next" type="button">다음</button>
+        <button class="btn btn-ghost" id="btn-speak" type="button">발음 듣기</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="panel" aria-label="퀴즈">
+      <div class="meta">
+        <span id="quiz-count">문제 1 / 5</span>
+        <span id="quiz-score">점수 0</span>
+      </div>
+      <div class="progress-bar"><span id="quiz-progress"></span></div>
+      <div id="quiz-body"></div>
+      <p class="feedback" id="quiz-feedback"></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-quiz-next" type="button" disabled>다음 문제</button>
+        <button class="btn btn-ghost" id="btn-quiz-restart" type="button">처음부터</button>
+      </div>
+    </section>
+
+    <footer>브라우저에서 바로 열어 사용하세요 · 발음은 기기 TTS를 사용합니다</footer>
+  </div>
+
+  <script>
+    const WORDS = [
+      { en: "curious", phonetic: "/ˈkjʊəriəs/", ko: "호기심이 많은", ex: "She is curious about how AI works.", exKo: "그녀는 AI가 어떻게 작동하는지 호기심이 많다." },
+      { en: "improve", phonetic: "/ɪmˈpruːv/", ko: "향상시키다", ex: "I want to improve my English.", exKo: "나는 영어 실력을 향상시키고 싶다." },
+      { en: "confident", phonetic: "/ˈkɒnfɪdənt/", ko: "자신감 있는", ex: "He feels more confident when speaking.", exKo: "그는 말할 때 더 자신감이 생긴다." },
+      { en: "habit", phonetic: "/ˈhæbɪt/", ko: "습관", ex: "Reading every day is a good habit.", exKo: "매일 읽는 것은 좋은 습관이다." },
+      { en: "practice", phonetic: "/ˈpræktɪs/", ko: "연습하다 / 연습", ex: "Practice makes progress.", exKo: "연습하면 실력이 는다." },
+      { en: "encourage", phonetic: "/ɪnˈkʌrɪdʒ/", ko: "격려하다", ex: "Teachers encourage students to ask questions.", exKo: "선생님들은 학생들이 질문하도록 격려한다." },
+      { en: "challenge", phonetic: "/ˈtʃælɪndʒ/", ko: "도전 / 난제", ex: "Learning a language is a fun challenge.", exKo: "언어를 배우는 것은 즐거운 도전이다." },
+      { en: "achieve", phonetic: "/əˈtʃiːv/", ko: "달성하다", ex: "You can achieve your goals step by step.", exKo: "목표를 한 걸음씩 달성할 수 있다." }
+    ];
+
+    let cardIndex = 0;
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizOrder = [];
+    let answered = false;
+
+    const $ = (id) => document.getElementById(id);
+
+    function speak(text) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US";
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }
+
+    function renderCard() {
+      const w = WORDS[cardIndex];
+      $("card-count").textContent = `${cardIndex + 1} / ${WORDS.length}`;
+      $("card-progress").style.width = `${((cardIndex + 1) / WORDS.length) * 100}%`;
+      $("card-body").innerHTML = `
+        <div class="word">${w.en}</div>
+        <div class="phonetic">${w.phonetic}</div>
+        <div class="meaning">${w.ko}</div>
+        <div class="example">${w.ex}<em>${w.exKo}</em></div>
+      `;
+      $("btn-prev").disabled = cardIndex === 0;
+      $("btn-next").textContent = cardIndex === WORDS.length - 1 ? "처음으로" : "다음";
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startQuiz() {
+      quizOrder = shuffle(WORDS).slice(0, 5);
+      quizIndex = 0;
+      quizScore = 0;
+      answered = false;
+      $("quiz-score").textContent = "점수 0";
+      $("quiz-feedback").textContent = "";
+      $("quiz-feedback").className = "feedback";
+      $("btn-quiz-next").disabled = true;
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      if (quizIndex >= quizOrder.length) {
+        $("quiz-count").textContent = "완료!";
+        $("quiz-progress").style.width = "100%";
+        $("quiz-body").innerHTML = `
+          <div class="score-box">
+            <div class="big">${quizScore} / ${quizOrder.length}</div>
+            <p>${quizScore === quizOrder.length ? "완벽해요! 잘했어요." : "다시 한 번 도전해 볼까요?"}</p>
+          </div>
+        `;
+        $("btn-quiz-next").disabled = true;
+        return;
+      }
+
+      const current = quizOrder[quizIndex];
+      const wrongs = shuffle(WORDS.filter((w) => w.en !== current.en)).slice(0, 3);
+      const options = shuffle([current, ...wrongs]);
+
+      $("quiz-count").textContent = `문제 ${quizIndex + 1} / ${quizOrder.length}`;
+      $("quiz-progress").style.width = `${(quizIndex / quizOrder.length) * 100}%`;
+      $("quiz-feedback").textContent = "";
+      $("quiz-feedback").className = "feedback";
+      $("btn-quiz-next").disabled = true;
+      answered = false;
+
+      $("quiz-body").innerHTML = `
+        <p class="quiz-prompt">이 영어 단어의 뜻은?</p>
+        <div class="quiz-word">${current.en}</div>
+        <div class="choices">
+          ${options.map((o) => `<button class="choice" type="button" data-answer="${o.en}">${o.ko}</button>`).join("")}
+        </div>
+      `;
+
+      $("quiz-body").querySelectorAll(".choice").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (answered) return;
+          answered = true;
+          const ok = btn.dataset.answer === current.en;
+          $("quiz-body").querySelectorAll(".choice").forEach((b) => {
+            b.disabled = true;
+            if (b.dataset.answer === current.en) b.classList.add("correct");
+          });
+          if (ok) {
+            quizScore += 1;
+            btn.classList.add("correct");
+            $("quiz-feedback").textContent = "정답이에요!";
+            $("quiz-feedback").className = "feedback ok";
+          } else {
+            btn.classList.add("wrong");
+            $("quiz-feedback").textContent = `아쉬워요. 정답은 "${current.ko}"`;
+            $("quiz-feedback").className = "feedback no";
+          }
+          $("quiz-score").textContent = `점수 ${quizScore}`;
+          $("btn-quiz-next").disabled = false;
+          $("btn-quiz-next").textContent =
+            quizIndex === quizOrder.length - 1 ? "결과 보기" : "다음 문제";
+        });
+      });
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        $(tab.dataset.tab).classList.add("active");
+        if (tab.dataset.tab === "quiz" && quizOrder.length === 0) startQuiz();
+      });
+    });
+
+    $("btn-prev").addEventListener("click", () => {
+      if (cardIndex > 0) {
+        cardIndex -= 1;
+        renderCard();
+      }
+    });
+
+    $("btn-next").addEventListener("click", () => {
+      cardIndex = cardIndex === WORDS.length - 1 ? 0 : cardIndex + 1;
+      renderCard();
+    });
+
+    $("btn-speak").addEventListener("click", () => speak(WORDS[cardIndex].en));
+    $("btn-quiz-next").addEventListener("click", () => {
+      quizIndex += 1;
+      renderQuiz();
+    });
+    $("btn-quiz-restart").addEventListener("click", startQuiz);
+
+    renderCard();
+  </script>
+</body>
+</html>
